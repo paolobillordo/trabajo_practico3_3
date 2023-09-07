@@ -1,8 +1,7 @@
 from ..models.film_model import Film
-
 from flask import request
-
 from decimal import Decimal
+from ..models.exceptions import FilmNotFound, InvalidDataError
 
 class FilmController:
     """Film controller class"""
@@ -12,7 +11,9 @@ class FilmController:
         """Get a film by id"""
         film = Film(film_id=film_id)
         result = Film.get(film)
-        if result is not None:
+        if result is None:
+            raise FilmNotFound(f"Film with id {film_id} not found")
+        else:
             return result.serialize(), 200
         
     @classmethod
@@ -29,6 +30,14 @@ class FilmController:
         """Create a new film"""
         data = request.json
         # TODO: Validate data
+        # if len(data.get('title')) < 3:
+        #     raise InvalidDataError("title must have 3 or more characters")
+        if data.get('language_id') is not int:
+            raise InvalidDataError("language_id must be an integer")
+        if data.get('rental_duration ') is not int:
+            raise InvalidDataError("rental_duration must be an integer")
+        
+
         if data.get('rental_rate') is not None:
             if isinstance(data.get('rental_rate'), int):
                 data['rental_rate'] = Decimal(data.get('rental_rate'))/100
@@ -36,6 +45,7 @@ class FilmController:
         if data.get('replacement_cost') is not None:
             if isinstance(data.get('replacement_cost'), int):
                 data['replacement_cost'] = Decimal(data.get('replacement_cost'))/100
+        
 
         film = Film(**data)
         Film.create(film)

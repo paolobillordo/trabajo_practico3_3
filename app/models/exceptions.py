@@ -18,3 +18,16 @@ class CustomException(Exception):
         })
         response.status_code = self.status_code
         return response
+    
+class FilmNotFound(CustomException):
+    
+    def __init__(self, description = "Film with id {film_id} not found", name = "FilmNotFound", status_code = 404):
+        super().__init__(status_code, name, description)
+
+
+class InvalidDataError(CustomException):
+    
+    def __init__(self, description = "The data entered is incorrect", name = "InvalidDataError", status_code = 400):
+        super().__init__(status_code, name, description)
+        
+    
