@@ -40,12 +40,13 @@ class FilmController:
             raise InvalidDataError("rental_rate must be an integer")
         if not isinstance(data.get('replacement_cost'), int):
             raise InvalidDataError("replacement_cost must be an integer")
-        if isinstance(data.get('special_features'), list):
-            for i in data.get('special_features'):
-                if i not in ["Trailers", "Commentaries", "Deleted Scenes", "Behind the Scenes"]:
-                    raise InvalidDataError("Invalid spacial_features")
-        else:
-            raise InvalidDataError("spacial_features must be a list")
+        if data.get('special_features'):
+            if isinstance(data.get('special_features'), list):
+                for i in data.get('special_features'):
+                    if i not in ["Trailers", "Commentaries", "Deleted Scenes", "Behind the Scenes"]:
+                        raise InvalidDataError("Invalid spacial_features")
+            else:
+                raise InvalidDataError("spacial_features must be a list")
         
         if data.get('rental_rate') is not None:
             if isinstance(data.get('rental_rate'), int):
